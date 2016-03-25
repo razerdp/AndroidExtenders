@@ -9,7 +9,7 @@ import android.util.Log;
  *  A extensional class for SpannableStringBuilder , ignore the Android sdk version .
  */
 public class SpannableStringBuilderX extends SpannableStringBuilder{
-    private final static String TAG = "SpannableStringBuilder";
+    private final static String TAG = "SpannableStringBuilderX";
 
     /**
      * Create a new SpannableStringBuilderX with empty contents
