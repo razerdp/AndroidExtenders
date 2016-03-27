@@ -1,4 +1,4 @@
-package com.liessu.extender;
+package com.liessu.extender.span;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,39 +11,39 @@ import android.util.Log;
 /**
  *  A extensional class for SpannableStringBuilder , ignore the Android sdk version .
  */
-public class SpannableStringBuilderX extends SpannableStringBuilder{
-    private final static String TAG = "SpannableStringBuilderX";
+public class SpannableStringBuilderEx extends SpannableStringBuilder{
+    private final static String TAG = "SpannableStringBuilderEx";
 
     /**
-     * Create a new SpannableStringBuilderX with empty contents
+     * Create a new SpannableStringBuilderEx with empty contents
      */
-    public SpannableStringBuilderX() {
+    public SpannableStringBuilderEx() {
         super("");
     }
 
     /**
-     * Create a new SpannableStringBuilderX containing a copy of the
+     * Create a new SpannableStringBuilderEx containing a copy of the
      * specified text, including its spans if any.
      */
-    public SpannableStringBuilderX(CharSequence text) {
+    public SpannableStringBuilderEx(CharSequence text) {
         super(text, 0, text.length());
     }
 
     /**
-     * Create a new SpannableStringBuilderX containing a copy of the
+     * Create a new SpannableStringBuilderEx containing a copy of the
      * specified slice of the specified text, including its spans if any.
      */
-    public SpannableStringBuilderX(CharSequence text, int start, int end) {
+    public SpannableStringBuilderEx(CharSequence text, int start, int end) {
        super(text , start , end);
     }
 
 
-    public SpannableStringBuilderX append(char text) {
+    public SpannableStringBuilderEx append(char text) {
         append(String.valueOf(text));
         return this;
     }
 
-    public SpannableStringBuilderX append(CharSequence text) {
+    public SpannableStringBuilderEx append(CharSequence text) {
         int length = length();
         replace(length, length, text, 0, text.length());
         return this;
@@ -64,7 +64,7 @@ public class SpannableStringBuilderX extends SpannableStringBuilder{
      * @param flags see {@link Spanned}.
      * @return this {@code SpannableStringBuilder}.
      */
-    public SpannableStringBuilderX append(CharSequence text, Object what, int flags) {
+    public SpannableStringBuilderEx append(CharSequence text, Object what, int flags) {
             int start = length();
             append(text);
             setSpan(what, start, length(), flags);
@@ -77,9 +77,9 @@ public class SpannableStringBuilderX extends SpannableStringBuilder{
      * @param text the character sequence to append.
      * @param flags see {@link Spanned}.
      * @param whats the objects to be spanned over the appended text.
-     * @return this {@code SpannableStringBuilderX}.
+     * @return this {@code SpannableStringBuilderEx}.
      */
-    public SpannableStringBuilderX append(CharSequence text, int flags ,Object... whats) {
+    public SpannableStringBuilderEx append(CharSequence text, int flags , Object... whats) {
         int start = length();
         append(text);
 
@@ -96,9 +96,9 @@ public class SpannableStringBuilderX extends SpannableStringBuilder{
      * @param imageSpanFlags one of {@link DynamicDrawableSpan#ALIGN_BOTTOM} or
      * {@link DynamicDrawableSpan#ALIGN_BASELINE}.
      * @param spanFlags determine how the span will behave
-     * @return SpannableStringBuilderX instance
+     * @return SpannableStringBuilderEx instance
      */
-    public SpannableStringBuilderX appendImageSpan(Drawable drawable , int imageSpanFlags , int spanFlags ){
+    public SpannableStringBuilderEx appendImageSpan(Drawable drawable , int imageSpanFlags , int spanFlags ){
         int start = length();
         append("ImageSpan");
         setSpan(new ImageSpan(drawable , imageSpanFlags), start, length(), spanFlags);
@@ -106,22 +106,23 @@ public class SpannableStringBuilderX extends SpannableStringBuilder{
     }
 
     /**
-     *  Cat off  the SpannableStringBuilderX's content , then build new one .
+     *  Cat off  the SpannableStringBuilderEx's content , then build new one .
      * @param start cat off start index
      * @param end cat off end index
-     * @return a new SpannableStringBuilderX instance .
+     * @return a new SpannableStringBuilderEx instance .
      */
-    public SpannableStringBuilderX rebuild(int start , int end){
-        return new SpannableStringBuilderX(this, start, end);
+    public SpannableStringBuilderEx rebuild(int start , int end){
+        return new SpannableStringBuilderEx(this, start, end);
     }
 
-    /**
-     * Return a CharSequence containing a copy of the chars in this buffer.
-     */
-    public CharSequence toSequence() {
-        return new SpannableStringBuilder(this);
-    }
 
+    public static SpannableStringBuilderEx valueOf(CharSequence source) {
+        if (source instanceof SpannableStringBuilderEx) {
+            return (SpannableStringBuilderEx) source;
+        } else {
+            return new SpannableStringBuilderEx(source);
+        }
+    }
 
 
     /**
@@ -132,18 +133,11 @@ public class SpannableStringBuilderX extends SpannableStringBuilder{
      */
     @Override
     public int getTextWatcherDepth() {
-        if( getVersion() >= Build.VERSION_CODES.M)
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             return super.getTextWatcherDepth();
         else {
             Log.e(TAG , "Android sdk  version number must be greater than or equal to 23. ");
             return -1;
         }
-    }
-
-    /**
-     * Returns the version string for the Android sdk .
-     */
-    private int getVersion(){
-        return Build.VERSION.SDK_INT;
     }
 }
