@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.liessu.extender.span;
 
 
@@ -15,18 +29,21 @@ import android.widget.TextView;
 /**
  * A extensional class for ClickableSpan .
  *
- * ex:
+ * <pre>
+ * ex :
  * new ClickableSpanEx(Color.BLUE,Color.GRAY) {
- * public void onClick(View widget) {
- * Toast.makeText(DemoApplication.getContext(),name,Toast.LENGTH_SHORT).show();
+ *      public void onClick(View widget) {
+ *          Toast.makeText(DemoApplication.getContext(),name,Toast.LENGTH_SHORT).show();
+ *      }
  * }
- * }
- * <p/>
- * Note : If you need to  indicator click event of  ClickableSpanEx  , you must set the TextView OnTouchListener
- * like this:
- * textView.setOnTouchListener(new ClickableSpanEx.ClickableSpanSelector());
+ * </pre>
+ * <pre>
+ * Note : If you need to  indicate click event of  ClickableSpanEx  , you must set the TextView OnTouchListener
+ * like this :
+ * <b>textView.setOnTouchListener(new ClickableSpanEx.ClickableSpanSelector());</b>
  * or
- * call {@link #onTouch(View, MotionEvent)} in your onTouch method
+ * call <b>{@link #onTouch(View, MotionEvent)} in your own onTouch method </b>.
+ * </pre>
  */
 public abstract class ClickableSpanEx extends ClickableSpan {
     private static final String TAG = "ClickableSpanEx";
@@ -65,7 +82,8 @@ public abstract class ClickableSpanEx extends ClickableSpan {
     }
 
     /**
-     * If you implement OnTouchListener, call this one in the onTouch method .
+     * If you have  implement OnTouchListener, call this one in your own
+     * {@link android.view.View.OnTouchListener#onTouch(View, MotionEvent) OnTouchListener.onTouch}  method .
      *
      * @param v     The view the touch event has been dispatched to.
      * @param event The MotionEvent object containing full information about the event.
@@ -76,7 +94,8 @@ public abstract class ClickableSpanEx extends ClickableSpan {
         if (v instanceof TextView) {
             TextView widget = (TextView) v;
             if (action == MotionEvent.ACTION_UP ||
-                    action == MotionEvent.ACTION_DOWN) {
+                    action == MotionEvent.ACTION_DOWN ||
+                        action == MotionEvent.ACTION_MOVE) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
 
@@ -101,13 +120,13 @@ public abstract class ClickableSpanEx extends ClickableSpan {
                 ClickableSpanEx[] link = buffer.getSpans(off, off, ClickableSpanEx.class);
 
                 if (link.length != 0) {
-                    if (action == MotionEvent.ACTION_UP) {
+                    if(action == MotionEvent.ACTION_DOWN) {
+                        Selection.setSelection(buffer, buffer.getSpanStart(link[0]), buffer.getSpanEnd(link[0]));
+                        link[0].setTransparent(false);
+                    }else{
                         link[0].onClick(widget);
                         link[0].setTransparent(true);
                         Selection.removeSelection(buffer);
-                    } else if (action == MotionEvent.ACTION_DOWN) {
-                        Selection.setSelection(buffer, buffer.getSpanStart(link[0]), buffer.getSpanEnd(link[0]));
-                        link[0].setTransparent(false);
                     }
 
                     return true;
@@ -141,7 +160,7 @@ public abstract class ClickableSpanEx extends ClickableSpan {
     }
 
     /**
-     * A inner static  class implements OnTouchListener interface . You can use it to indicator click
+     * A inner static  class implements OnTouchListener interface . You can use it to indicate click
      * event of  ClickableSpanEx .
      */
     public static class ClickableSpanSelector implements View.OnTouchListener {
