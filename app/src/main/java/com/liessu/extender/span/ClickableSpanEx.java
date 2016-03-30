@@ -163,10 +163,18 @@ public abstract class ClickableSpanEx extends ClickableSpan {
      * A inner static  class implements OnTouchListener interface . You can use it to indicate click
      * event of  ClickableSpanEx .
      */
-    public static class ClickableSpanSelector implements View.OnTouchListener {
+    public static class Selector implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return ClickableSpanEx.onTouch(v, event);
         }
+    }
+
+    /**'
+     * A class to build ClickableSpanEx
+     */
+    public class Builder {
+
+        //TODO :
     }
 }
