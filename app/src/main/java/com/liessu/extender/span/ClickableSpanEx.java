@@ -16,6 +16,7 @@ package com.liessu.extender.span;
 
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
@@ -46,28 +47,39 @@ import android.widget.TextView;
  * </pre>
  */
 public abstract class ClickableSpanEx extends ClickableSpan {
+    private static final int DEFAULT_FOREGROUND_COLOR = Color.BLUE;
+    private static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
     private static final String TAG = "ClickableSpanEx";
+    /**Is Intercept touch event **/
+    // protected static boolean isInterceptTouchEvent = false;
 
     /**
-     * foreground color , protected member
+     * Foreground color , protected member
      **/
-    protected int mForegroundColor = Color.BLUE;
+    protected int mForegroundColor = DEFAULT_FOREGROUND_COLOR;
     /**
-     * background color  , protected member
+     * Background color  , protected member
      **/
-    protected int mBackgroundColor = Color.TRANSPARENT;
+    protected int mBackgroundColor = DEFAULT_BACKGROUND_COLOR;
     /**
      * Determine whether the background of ClickableSpanEx transparent
      **/
-    protected boolean isBackgroundTransparent = true;
+    protected boolean isVisibility = true;
+
+    /**
+     * New ClickableSpanEx instance.
+     */
+    public ClickableSpanEx() {
+        this(DEFAULT_FOREGROUND_COLOR, DEFAULT_BACKGROUND_COLOR);
+    }
 
     /**
      * New ClickableSpanEx instance .
      *
      * @param foregroundColor foreground color
      */
-    public ClickableSpanEx(int foregroundColor) {
-        this(foregroundColor, Color.TRANSPARENT);
+    public ClickableSpanEx(@ColorInt int foregroundColor) {
+        this(foregroundColor, DEFAULT_BACKGROUND_COLOR);
     }
 
     /**
@@ -76,7 +88,7 @@ public abstract class ClickableSpanEx extends ClickableSpan {
      * @param foregroundColor foreground color
      * @param backgroundColor backgroundColor color
      */
-    public ClickableSpanEx(int foregroundColor, int backgroundColor) {
+    public ClickableSpanEx(@ColorInt int foregroundColor,@ColorInt int backgroundColor) {
         mForegroundColor = foregroundColor;
         mBackgroundColor = backgroundColor;
     }
@@ -95,7 +107,7 @@ public abstract class ClickableSpanEx extends ClickableSpan {
             TextView widget = (TextView) v;
             if (action == MotionEvent.ACTION_UP ||
                     action == MotionEvent.ACTION_DOWN ||
-                        action == MotionEvent.ACTION_MOVE) {
+                    action == MotionEvent.ACTION_MOVE) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
 
@@ -120,12 +132,12 @@ public abstract class ClickableSpanEx extends ClickableSpan {
                 ClickableSpanEx[] link = buffer.getSpans(off, off, ClickableSpanEx.class);
 
                 if (link.length != 0) {
-                    if(action == MotionEvent.ACTION_DOWN) {
+                    if (action == MotionEvent.ACTION_DOWN) {
                         Selection.setSelection(buffer, buffer.getSpanStart(link[0]), buffer.getSpanEnd(link[0]));
-                        link[0].setTransparent(false);
-                    }else{
+                        link[0].setBackgroundVisibility(false);
+                    } else {
                         link[0].onClick(widget);
-                        link[0].setTransparent(true);
+                        link[0].setBackgroundVisibility(true);
                         Selection.removeSelection(buffer);
                     }
 
@@ -139,12 +151,30 @@ public abstract class ClickableSpanEx extends ClickableSpan {
     }
 
     /**
+     * Sets the background color for this ClickableSpanEx.
+     *
+     * @param color the color of the background
+     */
+    public void setBackgroundColor(@ColorInt int color) {
+        this.mBackgroundColor = color;
+    }
+
+    /**
+     * Sets the foreground color for this ClickableSpanEx.
+     *
+     * @param foregroundColor the color of the background
+     */
+    public void setForegroundColor(@ColorInt int foregroundColor) {
+        this.mForegroundColor = foregroundColor;
+    }
+
+    /**
      * Determine whether the background of ClickableSpanEx transparent .
      *
-     * @param isTransparent disable background color if true
+     * @param isVisibility disable background color if true
      */
-    public void setTransparent(boolean isTransparent) {
-        this.isBackgroundTransparent = isTransparent;
+    public void setBackgroundVisibility(boolean isVisibility) {
+        this.isVisibility = isVisibility;
     }
 
     @Override
@@ -153,10 +183,7 @@ public abstract class ClickableSpanEx extends ClickableSpan {
         ds.setColor(mForegroundColor);
         ds.setUnderlineText(false);
 
-        if (!isBackgroundTransparent)
-            ds.bgColor = mBackgroundColor;
-        else
-            ds.bgColor = Color.TRANSPARENT;
+        ds.bgColor = isVisibility ? Color.TRANSPARENT : mBackgroundColor;
     }
 
     /**
@@ -164,17 +191,10 @@ public abstract class ClickableSpanEx extends ClickableSpan {
      * event of  ClickableSpanEx .
      */
     public static class Selector implements View.OnTouchListener {
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return ClickableSpanEx.onTouch(v, event);
         }
-    }
-
-    /**'
-     * A class to build ClickableSpanEx
-     */
-    public class Builder {
-
-        //TODO :
     }
 }

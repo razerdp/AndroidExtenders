@@ -125,13 +125,13 @@ public class SpannableStringBuilderEx extends SpannableStringBuilder{
 
     @Override
     public SpannableStringBuilderEx replace(int start, int end, CharSequence tb) {
-        replace(start, end, tb);
+        super.replace(start, end, tb);
         return this;
     }
 
     @Override
     public SpannableStringBuilderEx replace(int start, int end, CharSequence tb, int tbstart, int tbend) {
-        replace(start, end, tb, tbstart, tbend);
+        super.replace(start, end, tb, tbstart, tbend);
         return this;
     }
 
@@ -145,11 +145,6 @@ public class SpannableStringBuilderEx extends SpannableStringBuilder{
      * @param spanFlag determine how the span will behave. see {@link Spanned}.
      */
     public SpannableStringBuilderEx replace(@NonNull String str , int start , @NonNull Drawable drawable ,int imgFlag , int spanFlag){
-        if(str == null || drawable == null){
-            Log.e(TAG , "NullPointException..");
-            return null;
-        }
-
         int index = start + toString().substring(start).indexOf(str);
         setSpan(new ImageSpan(drawable,imgFlag) , index ,index + str.length() , spanFlag);
         return this;
@@ -164,11 +159,6 @@ public class SpannableStringBuilderEx extends SpannableStringBuilder{
      * @param spanFlag determine how the span will behave. see {@link Spanned}.
      */
     public SpannableStringBuilderEx replaceAll(@NonNull String str , @NonNull Drawable drawable ,int imgFlag , int spanFlag) {
-        if(str == null || drawable == null){
-            Log.e(TAG , "NullPointException..");
-            return null;
-        }
-
         String content = toString();
         int index = 0;
         while((index =content.indexOf(str,index)) != -1){
@@ -180,19 +170,19 @@ public class SpannableStringBuilderEx extends SpannableStringBuilder{
 
     @Override
     public SpannableStringBuilderEx insert(int where, CharSequence tb) {
-        insert(where, tb);
+        super.insert(where, tb);
         return this;
     }
 
     @Override
     public SpannableStringBuilderEx insert(int where, CharSequence tb, int start, int end) {
-        insert(where, tb, start, end);
+        super.insert(where, tb, start, end);
         return this;
     }
 
     @Override
     public SpannableStringBuilderEx delete(int start, int end) {
-        delete(start, end);
+        super.delete(start, end);
         return this;
     }
 
