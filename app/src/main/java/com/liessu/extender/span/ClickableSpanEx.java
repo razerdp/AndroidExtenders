@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package razerdp.friendcircle.app;
+package com.liessu.extender.span;
 
 
 import android.graphics.Color;
